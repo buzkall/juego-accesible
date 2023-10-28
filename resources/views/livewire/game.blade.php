@@ -42,10 +42,9 @@
 
             <div class="flex border border-indigo-400 p-4 m-4" aria-live="assertive">
                 <ul>
-
-               @foreach($announcements as $announcement)
-                    <li> {{ $announcement }}</li>
-                @endforeach
+                    @foreach($announcements as $announcement)
+                        <li> {{ $announcement }}</li>
+                    @endforeach
                 </ul>
             </div>
 
@@ -57,7 +56,8 @@
                         wire:keydown.space="jump"
                         wire:keydown.shift="ask"
                         class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        aria-label="play">
+                        aria-label="play"
+                        role="cell">
                     Play
                 </button>
             </div>

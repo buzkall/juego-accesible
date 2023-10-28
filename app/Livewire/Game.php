@@ -21,8 +21,6 @@ class Game extends Component
     public function mount()
     {
         $this->showInfo = true;
-        //$this->showInfo = false;
-        //$this->showBoard = true; // TBR
         $this->generateBoard();
     }
 
