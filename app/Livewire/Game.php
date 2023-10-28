@@ -7,24 +7,37 @@ use Livewire\Component;
 class Game extends Component
 {
     public $board = [];
-    public $time = 30; // seconds
-    public $score = 0;
-    public $alive = true;
-    public $hasWon = false;
-    public $x = 0;
-    public $y = 1;
+    public $time;
+    public $score;
+    public $alive;
+    public $hasWon;
+    public $x;
+    public $y;
     public $announcements = [];
     public $showInfo = false;
     public $showBoard = false;
     public $movement = null;
 
-    public function mount()
+    public function mount(): void
     {
         $this->showInfo = true;
+        //$this->showBoard = true;
+        $this->initializeGame();
         $this->generateBoard();
     }
 
-    public function tick()
+    public function initializeGame(): void
+    {
+        $this->time = 45; // seconds
+        $this->score = 0;
+        $this->alive = true;
+        $this->hasWon = false;
+        $this->x = 0;
+        $this->y = 1;
+        $this->announcements = [];
+    }
+
+    public function tick(): void
     {
         if ($this->alive && ! $this->hasWon) {
             $this->time--;
@@ -32,18 +45,17 @@ class Game extends Component
             if (isset($this->board[$this->y][$this->x]) && $this->board[$this->y][$this->x]['gravity'] == 0) {
                 $this->board[$this->y][$this->x]['element'] = '';
                 $this->y++;
-                $this->announcements = [];
                 $this->checkNewPosition();
             }
 
             if ($this->time === 0) {
                 $this->alive = false;
-                $this->announcements = ['Game Over'];
+                $this->announcements = ['Se acabó el tiempo, estás muerto!'];
             }
         }
     }
 
-    public function startGame()
+    public function startGame(): void
     {
         $this->showInfo = false;
         $this->showBoard = true;
@@ -51,7 +63,7 @@ class Game extends Component
         $this->ask();
     }
 
-    public function generateBoard()
+    public function generateBoard(): void
     {
         $this->board = [
             [
@@ -96,12 +108,11 @@ class Game extends Component
         ];
     }
 
-    public function moveLeft()
+    public function moveLeft(): void
     {
         if (! $this->alive) {
             return;
         }
-        $this->announcements = [];
 
         $this->board[$this->y][$this->x]['element'] = '';
         $this->x--;
@@ -109,7 +120,7 @@ class Game extends Component
         $this->checkNewPosition();
     }
 
-    public function moveRight()
+    public function moveRight(): void
     {
         if (! $this->alive) {
             return;
@@ -122,7 +133,7 @@ class Game extends Component
         $this->checkNewPosition();
     }
 
-    public function moveUp()
+    public function moveUp(): void
     {
         if (! $this->alive) {
             return;
@@ -134,7 +145,7 @@ class Game extends Component
         $this->checkNewPosition();
     }
 
-    public function jump()
+    public function jump(): void
     {
         if (! $this->alive) {
             return;
@@ -167,16 +178,16 @@ class Game extends Component
                 case '🪙':
                     $this->score++;
                     $this->board[$this->y][$this->x]['element'] = '💃';
-                    $this->announcements[] = 'Has ganado una moneda!';
+                    $this->announcements = ['Has ganado una moneda!'];
                     break;
                 case '🪨':
                     $this->alive = false;
-                    $this->announcements[] = 'Te comiste una roca. Estás muerto';
+                    $this->announcements = ['Te comiste una roca. Estás muerto'];
                     $this->board[$this->y][$this->x]['element'] = '😱';
                     break;
                 case '🕳️':
                     $this->alive = false;
-                    $this->announcements[] = 'Te caíste al agujero! Estás muerto';
+                    $this->announcements = ['Te caíste al agujero! Estás muerto'];
                     $this->board[$this->y][$this->x]['element'] = '😱';
                     break;
                 default:
@@ -186,17 +197,19 @@ class Game extends Component
         }
     }
 
-    public function ask()
+    public function ask($clearAnnouncements = false): void
     {
-        $this->announcements = [];
+        if ($clearAnnouncements) {
+            $this->announcements = [];
+        }
 
         if (! $this->alive) {
-            $this->announcements[] = 'Estás muerto!';
+            $this->announcements = ['Estás muerto!'];
             return;
         }
 
         if ($this->hasWon) {
-            $this->announcements[] = 'Has ganado con ' . $this->score . ' puntos!';
+            $this->announcements = ['Has ganado con ' . $this->score . ' puntos!'];
             return;
         }
 
@@ -209,7 +222,7 @@ class Game extends Component
                     $this->announcements[] = 'Hay una roca delante';
                     break;
                 case '🕳️':
-                    $this->announcements[] = 'Hay un agujero delante';
+                    $this->announcements = ['Hay un agujero delante'];
                     break;
                 default:
                     $this->announcements[] = 'La siguiente casilla está vacía';
@@ -244,20 +257,10 @@ class Game extends Component
         }
     }
 
-    public function describeEmoji($element)
+    public function playAgain(): void
     {
-        switch ($element) {
-            case '🪙':
-                return 'Moneda';
-            case '🪨':
-                return 'Roca';
-            case '🕳️':
-                return 'Agujero';
-            case '💃':
-                return 'Personaje';
-            default:
-                return 'Vacio';
-        }
+        $this->initializeGame();
+        $this->generateBoard();
     }
 
     public function render()
