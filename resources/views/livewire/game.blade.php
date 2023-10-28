@@ -30,9 +30,9 @@
         <div class="grid h-screen place-items-center"
              wire:poll.1s="tick">
             <div class="flex justify-end">
-                <div class=" w-48 text-7xl text-center align-content-center"
+                <div class="w-48 text-7xl text-center align-content-center"
                      aria-label="puntuación">
-                    {{ $score }}
+                    {{ $score }} <span class="text-xl">puntos</span>
                 </div>
                 <div class=" w-48 text-7xl text-center align-content-center"
                      aria-label="tiempo">

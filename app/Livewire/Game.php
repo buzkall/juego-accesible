@@ -156,9 +156,9 @@ class Game extends Component
     {
         if (isset($this->board[$this->y][$this->x])) {
             if ($this->board[$this->y][$this->x]['win'] == 1) {
-                $this->announcements[] = 'Has ganado!';
                 $this->hasWon = true;
                 $this->score += $this->time;
+                $this->announcements[] = 'Has ganado con ' . $this->score . ' puntos!';
                 $this->board[$this->y][$this->x]['element'] = '👩‍🦯';
                 return;
             }
@@ -196,7 +196,7 @@ class Game extends Component
         }
 
         if ($this->hasWon) {
-            $this->announcements[] = 'Has ganado!';
+            $this->announcements[] = 'Has ganado con ' . $this->score . ' puntos!';
             return;
         }
 
@@ -244,8 +244,9 @@ class Game extends Component
         }
     }
 
-    public function describeEmoji($element) {
-        switch($element) {
+    public function describeEmoji($element)
+    {
+        switch ($element) {
             case '🪙':
                 return 'Moneda';
             case '🪨':
